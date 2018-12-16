@@ -21,6 +21,8 @@ var config = {
 
 let game = new Phaser.Game(config);
 let player
+var cursors;
+
 
 function preload ()
 {
@@ -36,6 +38,7 @@ function create ()
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("assets", "tiles");
 
+
     //Background
     this.add.image(600, 300, "background")
 
@@ -48,10 +51,71 @@ function create ()
     player = this.physics.add.sprite(100, 450, 'player')
 
 
+    const anims = this.anims;
+      anims.create({
+        key: "left",
+        frames: anims.generateFrameNames("player", { start: 20, end: 29 }),
+        frameRate: 10,
+        repeat: -1
+      });
+      anims.create({
+        key: "right",
+        frames: anims.generateFrameNames("player", { start: 30, end: 39 }),
+        frameRate: 10,
+        repeat: -1
+      });
+      anims.create({
+        key: "front",
+        frames: anims.generateFrameNames("player", { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+      });
+      anims.create({
+        key: "back",
+        frames: anims.generateFrameNames("player", { start: 10, end: 17 }),
+        frameRate: 10,
+        repeat: -1
+      });
+
+    const camera = this.cameras.main
+          camera.startFollow(player)
+          camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
 }
 
 
 function update() {
+
+    const prevVelocity = player.body.velocity.clone()
+
+
+    player.body.setVelocity(0)
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    if (cursors.left.isDown) {
+        player.body.setVelocityX(-100);
+      } else if (cursors.right.isDown) {
+        player.body.setVelocityX(100);
+      } else if (cursors.up.isDown) {
+        player.body.setVelocityY(-100);
+      } else if (cursors.down.isDown) {
+        player.body.setVelocityY(100);
+      }
+    if (cursors.left.isDown) {
+        player.anims.play("left", true);
+      } else if (cursors.right.isDown) {
+        player.anims.play("right", true);
+      } else if (cursors.up.isDown) {
+        player.anims.play("back", true);
+      } else if (cursors.down.isDown) {
+        player.anims.play("front", true);
+      } else {
+        player.anims.stop();
+          if (prevVelocity.x < 0) player.setTexture('player', 'left')
+          else if (prevVelocity.x > 0) player.setTexture('player', 'right')
+          else if (prevVelocity.y < 0) player.setTexture('player', 'back')
+          else if (prevVelocity.y > 0) player.setTexture('player', 'front')
+    }
 
 }
