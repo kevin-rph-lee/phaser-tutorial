@@ -13,29 +13,32 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-var logo
+
 
 function preload ()
 {
-    this.load.image('logo', 'assets/logo.png');
+    this.load.image("tiles", "../assets/assets.png");
+    this.load.tilemapTiledJSON("map", "../assets/level1.json");
+    // this.load.spritesheet('player', '../assets/player.png', { frameWidth: 32, frameHeight: 64 })
+    // player = this.physics.add.sprite(100, 450, 'player')
+
 }
 
 function create ()
 {
-    logo = this.add.image(400, 150, 'logo');
+    const map = this.make.tilemap({ key: "map" });
+    const tileset = map.addTilesetImage("assets", "tiles");
 
-    this.tweens.add({
-        targets: logo,
-        y: 450,
-        duration: 2000,
-        ease: 'Power2',
-        yoyo: true,
-        loop: -1
-    });
+    const lowerLayer = map.createStaticLayer("LowerGround", tileset, 0, 0);
+    const groundLayer = map.createStaticLayer("Ground", tileset, 0, 0);
+    const grassLayer = map.createStaticLayer("Grass", tileset, 0, 0);
+    const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
+    const highLayer = map.createStaticLayer("High", tileset, 0, 0);
+
 
 }
 
 
 function update() {
-    logo.rotation += 0.01
+
 }
