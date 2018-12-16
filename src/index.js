@@ -6,12 +6,14 @@ var config = {
     width: 800,
     height: 600,
     scene: {
+        update: update,
         preload: preload,
         create: create
     }
 };
 
 var game = new Phaser.Game(config);
+var logo
 
 function preload ()
 {
@@ -20,7 +22,7 @@ function preload ()
 
 function create ()
 {
-    var logo = this.add.image(400, 150, 'logo');
+    logo = this.add.image(400, 150, 'logo');
 
     this.tweens.add({
         targets: logo,
@@ -31,4 +33,9 @@ function create ()
         loop: -1
     });
 
+}
+
+
+function update() {
+    logo.rotation += 0.01
 }
